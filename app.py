@@ -17,64 +17,74 @@ st.set_page_config(
 st.markdown("""
     <style>
     .stApp {
-        background: #E4D4C8;
+        background: linear-gradient(135deg, #E4D4C8, #F5E6E0, #DAD0C2);
     }
     .title {
-        font-size: 44px;
-        font-weight: bold;
+        font-size: 52px;
+        font-weight: 800;
         text-align: center;
-        color: #533440;
-        margin-bottom: 30px;
-        letter-spacing: 0.5px;
+        color: #2D2A32;
+        margin-bottom: 40px;
+        letter-spacing: 1px;
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
     }
     label, .stMarkdown, .stTextInput label, .stSelectbox label, .stNumberInput label, .stRadio label, .stCheckbox label {
-        color: #533440;
-        font-weight: bold;
+        color: #2D2A32;
+        font-weight: 600;
+        font-size: 18px;
     }
     .stSubheader {
-        color: #533440;
-        font-weight: bold;
+        color: #4A4E69;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        border-bottom: 3px solid #9DB6CC;
+        display: inline-block;
+        padding-bottom: 5px;
     }
     .card {
-        background-color: #FFFFFF;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 2px 8px rgba(164, 119, 134, 0.3);
+        background: rgba(255, 255, 255, 0.95);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.1);
         margin: auto;
-        max-width: 1000px;
+        max-width: 1100px;
+        backdrop-filter: blur(8px);
     }
     div.stButton > button {
-        background-color: #A47786;
+        background: linear-gradient(90deg, #A47786, #9DB6CC);
         color: #fff;
-        border-radius: 10px;
-        height: 50px;
-        font-size: 18px;
-        font-weight: bold;
+        border-radius: 12px;
+        height: 55px;
+        font-size: 20px;
+        font-weight: 700;
         border: none;
-        transition: background 0.2s;
-        box-shadow: 0 1px 3px rgba(164, 119, 134, 0.3);
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.2);
     }
     div.stButton > button:hover {
-        background-color: #9DB6CC;
-        color: #fff;
+        transform: scale(1.05);
+        filter: brightness(1.1);
     }
     .success, .error {
-        font-size: 22px;
-        font-weight: bold;
-        border-radius: 8px;
-        padding: 16px 0;
+        font-size: 24px;
+        font-weight: 700;
+        border-radius: 12px;
+        padding: 20px;
         text-align: center;
-        margin-top: 16px;
+        margin-top: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .success {
-        color: #533440;
-        background: #9DB6CC;
-        border: 1.5px solid #9DB6CC;
+        color: #2D2A32;
+        background: linear-gradient(135deg, #B5EAD7, #C7CEEA);
+        border: none;
     }
     .error {
-        color: #E4D4C8;
-        background: #A47786;
-        border: 1.5px solid #A47786;
+        color: #fff;
+        background: linear-gradient(135deg, #FF6B6B, #A47786);
+        border: none;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
     }
     </style>
 """, unsafe_allow_html=True)
