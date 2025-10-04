@@ -112,74 +112,6 @@ st.markdown("""
         border: none;
         text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
     }
-    .popup-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.45);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        padding: 20px;
-    }
-    .popup-card {
-        background: rgba(255, 255, 255, 0.98);
-        border-radius: 24px;
-        box-shadow: 0 16px 36px rgba(0,0,0,0.2);
-        max-width: 520px;
-        width: 100%;
-        padding: 40px 32px 28px;
-        text-align: center;
-        position: relative;
-    }
-    .popup-card h3 {
-        margin: 0 0 16px;
-        font-size: 30px;
-        font-weight: 800;
-        color: var(--color-primary);
-    }
-    .popup-card p {
-        margin: 0 0 12px;
-        font-size: 20px;
-        color: var(--color-secondary);
-        font-weight: 600;
-    }
-    .popup-card.popup-likely {
-        background: linear-gradient(135deg, var(--color-success-bg-start), var(--color-success-bg-end));
-        color: var(--color-primary);
-    }
-    .popup-card.popup-likely p {
-        color: var(--color-primary);
-    }
-    .popup-card.popup-unlikely {
-        background: linear-gradient(135deg, var(--color-error-bg-start), var(--color-error-bg-end));
-        color: #fff;
-    }
-    .popup-card.popup-unlikely h3 {
-        color: #fff;
-    }
-    .popup-card.popup-unlikely p {
-        color: #fff;
-    }
-    .popup-button {
-        margin-top: 20px;
-        display: flex;
-        justify-content: center;
-    }
-    .popup-button div.stButton > button {
-        background: rgba(255, 255, 255, 0.75);
-        color: var(--color-primary);
-        border: none;
-        box-shadow: none;
-        min-width: 140px;
-    }
-    .popup-card.popup-unlikely .popup-button div.stButton > button {
-        color: #A47786;
-    }
-    .popup-button div.stButton > button:hover {
-        transform: translateY(-1px);
-        filter: brightness(1.05);
-    }
     .metric-container {
         display: flex;
         justify-content: space-between;
@@ -206,11 +138,6 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
-
-if "show_popup" not in st.session_state:
-    st.session_state["show_popup"] = False
-if "popup_result" not in st.session_state:
-    st.session_state["popup_result"] = {}
 
 # --------------------------
 # Load model and assets
@@ -243,7 +170,7 @@ job_model, scaler, model_accuracy = load_assets()
 # --------------------------
 # App Title and Accuracy Info
 # --------------------------
-st.markdown('<div class="title">Enter Employee Details.</div>', unsafe_allow_html=True)
+st.markdown('<div class="title">Enter employee Details.</div>', unsafe_allow_html=True)
 
 col_acc, col_info = st.columns([1.2, 2])
 with col_acc:
@@ -367,46 +294,12 @@ if predict_btn:
         progress_placeholder.empty()
         progress_bar.empty()
 
-        st.session_state["popup_result"] = {
-            "type": "likely" if prediction[0] == 1 else "unlikely",
-            "confidence": confidence,
-        }
-        st.session_state["show_popup"] = True
+        if prediction[0] == 1:
+            st.markdown(f'<div class="result-box result-likely">✅ The candidate is <b>likely</b> to change jobs.<br>Confidence: {confidence:.1f}%</div>', unsafe_allow_html=True)
+        else:
+            st.markdown(f'<div class="result-box result-unlikely">❌ The candidate is <b>unlikely</b> to change jobs.<br>Confidence: {confidence:.1f}%</div>', unsafe_allow_html=True)
 
         with st.expander("Model Details & Input Data"):
             st.write(f"Model Accuracy: {model_accuracy:.1f}%")
             st.write("Input Data (numerical features scaled):")
             st.dataframe(input_data)
-
-if st.session_state.get("show_popup") and st.session_state.get("popup_result"):
-    popup_data = st.session_state.get("popup_result", {})
-    is_likely = popup_data.get("type") == "likely"
-    confidence_value = popup_data.get("confidence", 0.0)
-    popup_variant = "popup-likely" if is_likely else "popup-unlikely"
-    popup_message = (
-        "The candidate is likely to change jobs." if is_likely else "The candidate is unlikely to change jobs."
-    )
-    popup_icon = "✅" if is_likely else "❌"
-
-    popup_placeholder = st.empty()
-    with popup_placeholder.container():
-        st.markdown(
-            f"""
-            <div class="popup-overlay">
-                <div class="popup-card {popup_variant}">
-                    <h3>{popup_icon} Prediction Result</h3>
-                    <p>{popup_message}</p>
-                    <p>Confidence: {confidence_value:.1f}%</p>
-            """,
-            unsafe_allow_html=True,
-        )
-        st.markdown('<div class="popup-button">', unsafe_allow_html=True)
-        close_clicked = st.button("Close", key="close_popup_button")
-        st.markdown('</div></div></div>', unsafe_allow_html=True)
-
-    if close_clicked:
-        st.session_state["show_popup"] = False
-        if hasattr(st, "rerun"):
-            st.rerun()
-        else:
-            st.experimental_rerun()
