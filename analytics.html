@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Prediction Analytics Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    /* Color Palette Update */
+    :root {
+      --primary-dark: #533440; /* Deep Purple/Brown (Text, main elements) */
+      --secondary-accent: #A47786; /* Rose Gold (Accents, hover) */
+      --background-light: #E4D4C8; /* Cream/Pale Beige (Page BG) */
+      --card-bg: #FFFFFF; /* Pure White (Card Background) */
+      --hover-shadow: rgba(164, 119, 134, 0.5); /* Shadow for interactive elements */
+      --gradient-bg: linear-gradient(135deg, #E4D4C8 0%, #FAF0E6 100%); /* Subtle page gradient */
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: var(--gradient-bg);
+      color: var(--primary-dark);
+      overflow-x: hidden;
+      min-height: 100vh;
+      transition: background 0.5s ease;
+    }
+
+    /* --- NAVIGATION BAR STYLES --- */
+    .navbar {
+      background: rgba(83, 52, 64, 0.95); /* Slightly darker for better contrast */
+      backdrop-filter: blur(15px); /* Increased blur */
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 3rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      animation: navSlideDown 0.8s ease-out;
+    }
+
+    .navbar .logo {
+      font-weight: 700;
+      font-size: 2rem; /* Slightly larger */
+      letter-spacing: 2px;
+      color: var(--background-light);
+      text-shadow: 0 0 10px var(--secondary-accent);
+      cursor: default;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 2.5rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links a {
+      color: var(--background-light);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1.05rem;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0%;
+      height: 3px; /* Thicker underline */
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--secondary-accent);
+      transition: width 0.3s ease;
+      border-radius: 3px;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      text-shadow: 0 0 15px var(--secondary-accent);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* --- Keyframe Animations --- */
+    @keyframes navSlideDown {
+      0% { transform: translateY(-100%); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    
+    @keyframes fadeInSlideUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- Analytics Section --- */
+    .analytics-container {
+      max-width: 95vw;
+      margin: 40px auto;
+      text-align: center;
+      padding: 0 1rem;
+      animation: fadeInSlideUp 1s ease-out 0.3s forwards;
+      opacity: 0; /* Start invisible */
+    }
+
+    .analytics-container h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 5px;
+        text-shadow: 1px 1px 2px rgba(83, 52, 64, 0.2);
+    }
+
+    .analytics-container p {
+        font-size: 1.1rem;
+        font-weight: 300;
+        margin-bottom: 40px;
+        color: rgba(83, 52, 64, 0.8);
+    }
+
+    .chart-card {
+      background: var(--card-bg);
+      padding: 30px; /* Increased padding */
+      border-radius: 15px; /* Softer corners */
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1); /* Deeper shadow */
+      margin-bottom: 30px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .chart-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15), 0 0 15px var(--hover-shadow);
+    }
+
+    .chart-card h3 {
+      color: var(--primary-dark);
+      margin-bottom: 25px;
+      font-weight: 600;
+      border-bottom: 2px solid var(--secondary-accent); /* Subtle separator */
+      padding-bottom: 10px;
+    }
+
+    /* Layout for charts */
+    .full-width-chart {
+      width: 90%;
+      margin: 0 auto 40px auto;
+    }
+
+    .middle-charts, .bottom-charts {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px; /* Increased gap */
+      width: 90%;
+      margin: 0 auto 40px auto;
+    }
+
+    .middle-charts .chart-card, .bottom-charts .chart-card {
+      flex: 1 1 48%;
+      min-height: 400px; /* Ensure charts have space */
+    }
+    
+    /* Iframe Styling */
+    iframe#appFrame {
+      width: 100%;
+      height: 90vh;
+      border: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+      display: block;
+      border-radius: 0; /* Full width for the app */
+    }
+
+    iframe#appFrame.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--primary-dark);
+      color: var(--background-light);
+      text-align: center;
+      padding: 1.2rem 0;
+      font-size: 0.9rem;
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.3);
+      border-top: 3px solid var(--secondary-accent);
+    }
+
+    /* --- Media Queries --- */
+    @media (max-width: 1200px) {
+        .full-width-chart, .middle-charts, .bottom-charts {
+            width: 95%;
+        }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+          padding: 1rem 1.5rem;
+      }
+      .nav-links {
+          gap: 1.5rem;
+      }
+      .analytics-container h1 {
+          font-size: 2rem;
+      }
+      .middle-charts, .bottom-charts {
+        flex-direction: column;
+        width: 95%;
+        gap: 20px;
+      }
+      .middle-charts .chart-card, .bottom-charts .chart-card {
+        min-height: 300px;
+      }
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Logic for showing the iframe when 'Input' is clicked
+      function showIframe(event) {
+        event.preventDefault();
+        const analyticsSection = document.querySelector('.analytics-container');
+        const iframe = document.getElementById('appFrame');
+        if (analyticsSection && iframe) {
+          // Fade out analytics dashboard
+          analyticsSection.style.opacity = '0';
+          setTimeout(() => {
+            analyticsSection.style.display = 'none';
+            // Fade in iframe
+            iframe.src = "http://localhost:8501"; 
+            iframe.classList.add('visible');
+          }, 500); // Wait for fade-out transition
+        }
+      }
+      var inputLinks = document.querySelectorAll('a[href="app.py"]');
+      inputLinks.forEach(function(link) {
+        link.addEventListener('click', showIframe);
+      });
+      
+      // Initialize charts after DOM and data are ready
+      window.addEventListener("DOMContentLoaded", initDashboard);
+    });
+  </script>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">JobPredictAI</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="app.py">Input</a></li>
+        <li><a href="analytics.html">Analytics</a></li>
+        <li><a href="#">Reports</a></li>
+        <li><a href="#">Settings</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="analytics-container">
+    <h1>📊 Job Prediction Analytics Dashboard</h1>
+    <p>Dive into data-driven insights to understand employee attrition trends.</p>
+
+    <div class="chart-card full-width-chart">
+      <h3>📈 Feature Importance (Model's Key Drivers)</h3>
+      <canvas id="barChart"></canvas>
+    </div>
+
+    <div class="middle-charts">
+      <div class="chart-card">
+        <h3>🎓 Job Change Rate by Education Level</h3>
+        <canvas id="eduChart"></canvas>
+      </div>
+
+      <div class="chart-card">
+        <h3>⏳ Job Change Trend by Experience Level</h3>
+        <canvas id="lineChart"></canvas>
+      </div>
+    </div>
+
+    <div class="bottom-charts">
+      <div class="chart-card">
+        <h3>🎯 Distribution of Job Change Predictions</h3>
+        <canvas id="pieChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>🏢 Department-wise Job Change Distribution</h3>
+        <canvas id="pieChart2"></canvas>
+      </div>
+    </div>
+  </section>
+
+  
+  <footer>
+    <p>Built with Data Science and Style | © 2025 JobPredictAI</p>
+  </footer>
+
+  <script>
+    async function fetchAnalyticsData() {
+      // Same data fetching logic
+      try {
+        const response = await fetch("analytics_data.json");
+        if (!response.ok) throw new Error("Network response was not ok");
+        return await response.json();
+      } catch (error) {
+        console.error("Failed to fetch analytics data:", error);
+        // Return dummy data if fetch fails for testing charts
+        return {
+            pred_distribution: { "Likely to Change (1)": 30, "Unlikely to Change (0)": 70 },
+            feature_importances: { "CDI": 40, "Experience": 25, "City": 15, "Training Hours": 10, "Other": 10 },
+            experience_labels: ['<1', '1-5', '6-10', '11-15', '>15'],
+            experience_values: [50, 40, 30, 20, 15],
+            education_labels: ['High School', 'Graduate', 'Masters', 'Phd'],
+            education_values: [35, 20, 15, 10]
+        };
+      }
+    }
+
+    // Chart.js Color Schemes (Updated for visual appeal)
+    const PRIMARY_ACCENT = "#A47786"; // Rose Gold
+    const SECONDARY_BLUE = "#9DB6CC"; // Soft Blue
+    const TERTIARY_DARK = "#533440"; // Deep Purple/Brown
+
+    function createPieChart(ctx, dist) {
+      return new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: Object.keys(dist),
+          datasets: [{
+            data: Object.values(dist),
+            backgroundColor: [PRIMARY_ACCENT, SECONDARY_BLUE],
+            hoverOffset: 10,
+            borderWidth: 1
+          }]
+        },
+        options: { responsive: true, plugins: { legend: { position: "right", labels: { font: { family: 'Poppins' } } } } }
+      });
+    }
+
+    function createDepartmentPieChart(ctx) {
+      const departmentData = {
+        IT: 40,
+        HR: 20,
+        Sales: 25,
+        Finance: 15
+      };
+      return new Chart(ctx, {
+        type: "doughnut", // Changed to doughnut for modern look
+        data: {
+          labels: Object.keys(departmentData),
+          datasets: [{
+            data: Object.values(departmentData),
+            backgroundColor: ["#4C7C9C", "#9DB6CC", "#A47786", "#533440"],
+            hoverOffset: 8,
+            borderWidth: 1
+          }]
+        },
+        options: { responsive: true, cutout: '70%', plugins: { legend: { position: "right", labels: { font: { family: 'Poppins' } } } } }
+      });
+    }
+
+    function createBarChart(ctx, data) {
+      const palette = [PRIMARY_ACCENT, SECONDARY_BLUE, TERTIARY_DARK, "#DCD0C0"]; // Use defined colors
+      const values = Object.values(data);
+      const backgroundColors = values.map((_, i) => palette[i % palette.length]);
+      return new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: Object.keys(data),
+          datasets: [{
+            label: "Feature Importance (%)",
+            data: values,
+            backgroundColor: backgroundColors,
+            borderRadius: 5, // Rounded bars
+          }]
+        },
+        options: {
+          responsive: true,
+          indexAxis: 'y', // Horizontal bars look cleaner for importance
+          scales: {
+            x: { beginAtZero: true, title: { display: true, text: "%", font: { family: 'Poppins' } } },
+            y: { ticks: { font: { family: 'Poppins' } } }
+          }
+        }
+      });
+    }
+
+    function createLineChart(ctx, labels, values) {
+      return new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Job Change Likelihood (%)",
+            data: values,
+            borderColor: PRIMARY_ACCENT,
+            backgroundColor: "rgba(164,119,134,0.3)",
+            pointBackgroundColor: TERTIARY_DARK,
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: { responsive: true, scales: { x: { ticks: { font: { family: 'Poppins' } } }, y: { ticks: { font: { family: 'Poppins' } } } } }
+      });
+    }
+
+    function createEducationChart(ctx, labels, values) {
+      return new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Job Change Rate (%)",
+            data: values,
+            backgroundColor: SECONDARY_BLUE,
+            borderRadius: 5,
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: { 
+            y: { beginAtZero: true, title: { display: true, text: "%", font: { family: 'Poppins' } } },
+            x: { ticks: { font: { family: 'Poppins' } } }
+          }
+        }
+      });
+    }
+
+    async function initDashboard() {
+      // Wait for all elements to exist before initializing charts
+      await new Promise(resolve => setTimeout(resolve, 0)); 
+      
+      const data = await fetchAnalyticsData();
+      if (!data) return;
+
+      // Get contexts
+      const pieCtx = document.getElementById("pieChart")?.getContext("2d");
+      const barCtx = document.getElementById("barChart")?.getContext("2d");
+      const lineCtx = document.getElementById("lineChart")?.getContext("2d");
+      const eduCtx = document.getElementById("eduChart")?.getContext("2d");
+      const pie2Ctx = document.getElementById("pieChart2")?.getContext("2d");
+
+      // Create charts if context is available
+      if (pieCtx) createPieChart(pieCtx, data.pred_distribution);
+      if (barCtx) createBarChart(barCtx, data.feature_importances);
+      if (lineCtx) createLineChart(lineCtx, data.experience_labels, data.experience_values);
+      if (eduCtx && data.education_labels && data.education_values) {
+        createEducationChart(eduCtx, data.education_labels, data.education_values);
+      }
+      if (pie2Ctx) {
+        createDepartmentPieChart(pie2Ctx);
+      }
+    }
+  </script>
+</body>
+</html>
