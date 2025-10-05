@@ -26,16 +26,16 @@ st.set_page_config(
 st.markdown("""
     <style>
     :root {
-        --color-bg-start: #E4D4C8;
-        --color-bg-mid: #F5E6E0;
-        --color-bg-end: #DAD0C2;
-        --color-primary: #2D2A32;
-        --color-secondary: #4A4E69;
-        --color-accent: #9DB6CC;
-        --color-success-bg-start: #B5EAD7;
-        --color-success-bg-end: #C7CEEA;
-        --color-error-bg-start: #FF6B6B;
-        --color-error-bg-end: #A47786;
+        --color-bg-start: #062F4F;
+        --color-bg-mid: #2E8BC0;
+        --color-bg-end: #B1D4E0;
+        --color-primary: #ffffff;
+        --color-secondary: #B1D4E0;
+        --color-accent: #2E8BC0;
+        --color-success-bg-start: #2E8BC0;
+        --color-success-bg-end: #B1D4E0;
+        --color-error-bg-start: #A71D31;
+        --color-error-bg-end: #062F4F;
         --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     .stApp {
@@ -46,18 +46,18 @@ st.markdown("""
         font-size: 52px;
         font-weight: 800;
         text-align: center;
-        color: var(--color-primary);
+        color: #ffffff;
         margin-bottom: 40px;
         letter-spacing: 1px;
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+        text-shadow: 0 0 10px rgba(177,212,224,0.5);
     }
     label, .stMarkdown, .stTextInput label, .stSelectbox label, .stNumberInput label, .stRadio label, .stCheckbox label {
-        color: var(--color-primary);
+        color: #ffffff;
         font-weight: 600;
         font-size: 18px;
     }
     .stSubheader {
-        color: black !important;
+        color: #ffffff !important;
         font-size: 28px;
         font-weight: 700;
         margin-bottom: 20px;
@@ -75,7 +75,7 @@ st.markdown("""
         backdrop-filter: blur(8px);
     }
     div.stButton > button {
-        background: linear-gradient(90deg, #A47786, var(--color-accent));
+        background: linear-gradient(90deg, #062F4F, #2E8BC0);
         color: #fff;
         border-radius: 12px;
         height: 55px;
@@ -102,13 +102,13 @@ st.markdown("""
         margin-right: auto;
     }
     .result-likely {
-        color: var(--color-primary);
-        background: linear-gradient(135deg, var(--color-success-bg-start), var(--color-success-bg-end));
+        color: #fff;
+        background: #4CAF50;
         border: none;
     }
     .result-unlikely {
         color: #fff;
-        background: linear-gradient(135deg, var(--color-error-bg-start), var(--color-error-bg-end));
+        background: #D32F2F;
         border: none;
         text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
     }
@@ -121,20 +121,20 @@ st.markdown("""
         margin-bottom: 20px;
     }
     .info-box {
-        background: #f0f4f8;
+        background: rgba(255,255,255,0.1);
         border-radius: 12px;
         padding: 12px 20px;
         font-size: 16px;
-        color: var(--color-primary);
+        color: #ffffff;
         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         max-width: 350px;
         text-align: center;
     }
     [data-testid="stMetricValue"] {
-        color: red !important;
+        color: #FF4B4B !important;
     }
     [data-testid="stMetricLabel"] {
-        color: red !important;
+        color: #FF4B4B !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -264,7 +264,7 @@ if predict_btn:
             st.stop()
 
         input_data = pd.DataFrame([{
-            "city": city,
+            "city": "city_21",
             "city_development_index": city_development_index_val,
             "gender": gender,
             "relevent_experience": relevent_experience,
