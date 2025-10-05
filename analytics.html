@@ -12,12 +12,12 @@
 
     /* Color Palette Update */
     :root {
-      --primary-dark: #533440; /* Deep Purple/Brown (Text, main elements) */
-      --secondary-accent: #A47786; /* Rose Gold (Accents, hover) */
-      --background-light: #E4D4C8; /* Cream/Pale Beige (Page BG) */
+      --primary-dark: #062F4F; /* Deep Navy Blue */
+      --secondary-accent: #2E8BC0; /* Medium Blue Accent */
+      --background-light: #B1D4E0; /* Soft Light Blue */
       --card-bg: #FFFFFF; /* Pure White (Card Background) */
-      --hover-shadow: rgba(164, 119, 134, 0.5); /* Shadow for interactive elements */
-      --gradient-bg: linear-gradient(135deg, #E4D4C8 0%, #FAF0E6 100%); /* Subtle page gradient */
+      --hover-shadow: rgba(46, 139, 192, 0.4); /* Shadow for interactive elements */
+      --gradient-bg: linear-gradient(135deg, #062F4F 0%, #2E8BC0 50%, #B1D4E0 100%); /* Subtle page gradient */
     }
 
     body {
@@ -32,7 +32,7 @@
 
     /* --- NAVIGATION BAR STYLES --- */
     .navbar {
-      background: rgba(83, 52, 64, 0.95); /* Slightly darker for better contrast */
+      background: rgba(6, 47, 79, 0.9); /* Slightly darker for better contrast */
       backdrop-filter: blur(15px); /* Increased blur */
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
       display: flex;
@@ -49,8 +49,8 @@
       font-weight: 700;
       font-size: 2rem; /* Slightly larger */
       letter-spacing: 2px;
-      color: var(--background-light);
-      text-shadow: 0 0 10px var(--secondary-accent);
+      color: #B1D4E0;
+      text-shadow: 0 0 10px #2E8BC0;
       cursor: default;
     }
 
@@ -63,7 +63,7 @@
     }
 
     .nav-links a {
-      color: var(--background-light);
+      color: #B1D4E0;
       text-decoration: none;
       font-weight: 500;
       font-size: 1.05rem;
@@ -79,14 +79,14 @@
       bottom: -6px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--secondary-accent);
+      background: #2E8BC0;
       transition: width 0.3s ease;
       border-radius: 3px;
     }
 
     .nav-links a:hover {
       color: #fff;
-      text-shadow: 0 0 15px var(--secondary-accent);
+      text-shadow: 0 0 15px #B1D4E0;
     }
 
     .nav-links a:hover::after {
@@ -117,16 +117,17 @@
     .analytics-container h1 {
         font-size: 2.5rem;
         font-weight: 700;
-        color: var(--primary-dark);
+        color: #ffffff;
         margin-bottom: 5px;
-        text-shadow: 1px 1px 2px rgba(83, 52, 64, 0.2);
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
     }
 
     .analytics-container p {
         font-size: 1.1rem;
         font-weight: 300;
         margin-bottom: 40px;
-        color: rgba(83, 52, 64, 0.8);
+        color: #ffffff;
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
     }
 
     .chart-card {
@@ -147,7 +148,7 @@
       color: var(--primary-dark);
       margin-bottom: 25px;
       font-weight: 600;
-      border-bottom: 2px solid var(--secondary-accent); /* Subtle separator */
+      border-bottom: 2px solid #2E8BC0; /* Subtle separator */
       padding-bottom: 10px;
     }
 
@@ -189,13 +190,29 @@
 
     /* Footer */
     footer {
-      background: var(--primary-dark);
-      color: var(--background-light);
+      background: rgba(6, 47, 79, 0.9);
+      color: #B1D4E0;
       text-align: center;
       padding: 1.2rem 0;
       font-size: 0.9rem;
       box-shadow: 0 -4px 15px rgba(0,0,0,0.3);
-      border-top: 3px solid var(--secondary-accent);
+      border-top: 3px solid #2E8BC0;
+    }
+
+    /* CTA button styles if any */
+    .cta-btn {
+      background: rgba(46, 139, 192, 0.3);
+      border: 2px solid #2E8BC0;
+      color: var(--primary-dark);
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .cta-btn:hover {
+      background-color: #2E8BC0;
+      color: #fff;
     }
 
     /* --- Media Queries --- */
@@ -328,9 +345,9 @@
     }
 
     // Chart.js Color Schemes (Updated for visual appeal)
-    const PRIMARY_ACCENT = "#A47786"; // Rose Gold
-    const SECONDARY_BLUE = "#9DB6CC"; // Soft Blue
-    const TERTIARY_DARK = "#533440"; // Deep Purple/Brown
+    const PRIMARY_ACCENT = "#2E8BC0";
+    const SECONDARY_BLUE = "#B1D4E0";
+    const TERTIARY_DARK = "#062F4F";
 
     function createPieChart(ctx, dist) {
       return new Chart(ctx, {
@@ -361,7 +378,7 @@
           labels: Object.keys(departmentData),
           datasets: [{
             data: Object.values(departmentData),
-            backgroundColor: ["#4C7C9C", "#9DB6CC", "#A47786", "#533440"],
+            backgroundColor: [TERTIARY_DARK, SECONDARY_BLUE, PRIMARY_ACCENT, "#8AB6D6"],
             hoverOffset: 8,
             borderWidth: 1
           }]
@@ -371,7 +388,7 @@
     }
 
     function createBarChart(ctx, data) {
-      const palette = [PRIMARY_ACCENT, SECONDARY_BLUE, TERTIARY_DARK, "#DCD0C0"]; // Use defined colors
+      const palette = [PRIMARY_ACCENT, SECONDARY_BLUE, TERTIARY_DARK, "#8AB6D6"]; // Use defined colors
       const values = Object.values(data);
       const backgroundColors = values.map((_, i) => palette[i % palette.length]);
       return new Chart(ctx, {
@@ -405,7 +422,7 @@
             label: "Job Change Likelihood (%)",
             data: values,
             borderColor: PRIMARY_ACCENT,
-            backgroundColor: "rgba(164,119,134,0.3)",
+            backgroundColor: "rgba(46, 139, 192, 0.3)",
             pointBackgroundColor: TERTIARY_DARK,
             fill: true,
             tension: 0.4
