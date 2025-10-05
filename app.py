@@ -264,7 +264,7 @@ if predict_btn:
             st.stop()
 
         input_data = pd.DataFrame([{
-            "city": "city_21",
+            "city": city,
             "city_development_index": city_development_index_val,
             "gender": gender,
             "relevent_experience": relevent_experience,
